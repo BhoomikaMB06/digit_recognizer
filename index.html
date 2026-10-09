@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draw a Number</title>
+<style>
+  :root {
+    --ink: #0f0e17;          /* outlines, shadows, pen */
+    --paper: #fffffe;        /* white panels */
+    --bg1: #7f5af0;          /* page gradient start (purple) */
+    --bg2: #2cb5e8;          /* page gradient end (sky blue) */
+    --tile1: #ff8906;        /* result tile (orange) */
+    --tile2: #f25f4c;        /* result tile (coral red) */
+    --bar: #2cb67d;          /* normal bars (green) */
+    --bar-top: #ff8906;      /* winning bar (orange) */
+    --pop: #ffd803;          /* yellow accent */
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 28px 20px 48px; min-height: 100vh;
+    background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    position: relative; overflow-x: hidden;
+  }
+
+  /* Coloured circles in the corners */
+  .blob { position: fixed; border-radius: 50%; z-index: 0; pointer-events: none; border: 3px solid var(--ink); }
+  .b1 { width: 220px; height: 220px; background: var(--pop);  top: -90px;  left: -80px; }
+  .b2 { width: 160px; height: 160px; background: var(--tile2); top: -50px; right: -40px; }
+  .b3 { width: 200px; height: 200px; background: var(--bar);  bottom: -90px; left: -60px; }
+  .b4 { width: 260px; height: 260px; background: var(--tile1); bottom: -120px; right: -80px; }
+
+  .wrap { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+
+  h1 {
+    margin: 0 0 8px; letter-spacing: -1px; line-height: 1; color: var(--paper);
+    font-family: "Arial Black", "Segoe UI Black", Impact, sans-serif;
+    font-size: clamp(2rem, 6vw, 3.4rem);
+    text-shadow: 4px 4px 0 var(--ink);
+  }
+  .sub { margin: 0 0 26px; font-size: 1.05rem; max-width: 52ch; color: var(--paper); font-weight: 700; }
+
+  .panel {
+    background: var(--paper); border: 3px solid var(--ink); border-radius: 12px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .top { display: flex; gap: 26px; flex-wrap: wrap; align-items: stretch; }
+
+  .pad-col { flex: 0 0 auto; width: 300px; max-width: 100%; }
+  canvas#pad {
+    display: block; width: 100%; aspect-ratio: 1 / 1;
+    background: #fff; border-radius: 8px; touch-action: none; cursor: crosshair;
+  }
+  #clear {
+    width: 100%; margin-top: 18px; padding: 13px;
+    background: var(--ink); color: var(--pop); border: 3px solid var(--ink); border-radius: 12px;
+    font: 800 1rem "Trebuchet MS", "Segoe UI", sans-serif; cursor: pointer;
+    box-shadow: 4px 4px 0 var(--tile1);
+  }
+  #clear:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--tile1); }
+  #clear:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
+
+  .result {
+    flex: 1 1 240px; min-height: 300px;
+    background: linear-gradient(160deg, var(--tile1) 0%, var(--tile2) 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px; text-align: center;
+  }
+  #digit {
+    font-family: "Arial Black", "Segoe UI Black", Impact, sans-serif;
+    font-size: clamp(6rem, 22vw, 9.5rem); line-height: 1; color: var(--paper);
+    text-shadow: 5px 5px 0 var(--ink);
+  }
+  #status { margin-top: 14px; font-weight: 800; font-size: 1.05rem; color: var(--ink); }
+
+  .chart { margin-top: 30px; padding: 18px 18px 14px; }
+  .chart h2 { margin: 0 0 14px; font-size: 1rem; font-weight: 800; }
+  .cols { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; }
+  .pct { text-align: center; font-size: .7rem; font-weight: 800; margin-bottom: 4px; }
+  .well {
+    height: 130px; display: flex; align-items: flex-end; overflow: hidden;
+    background: #ece9ff; border: 3px solid var(--ink); border-radius: 6px;
+  }
+  .fill { width: 100%; height: 0; background: var(--bar); transition: height .12s; }
+  .col.top .fill { background: var(--bar-top); }
+  .lab { text-align: center; margin-top: 6px; font-weight: 900; font-size: 1.1rem; }
+
+  #err {
+    display: none; margin-top: 18px; padding: 10px 14px; font-weight: 700;
+    background: var(--paper); color: #b00020; border: 3px solid var(--ink); border-radius: 10px;
+  }
+  @media (max-width: 480px) { .pct { font-size: .6rem; } .cols { gap: 4px; } }
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="blob b3"></div><div class="blob b4"></div>
+
+<div class="wrap">
+  <h1>Draw a Number</h1>
+  <p class="sub">Scribble any digit from 0 to 9 in the box. The model makes its guess while you draw.</p>
+
+  <div class="top">
+    <div class="pad-col">
+      <div class="panel"><canvas id="pad" width="280" height="280"></canvas></div>
+      <button id="clear">Clear</button>
+    </div>
+    <div class="panel result">
+      <div id="digit">?</div>
+      <div id="status">Draw something in the box</div>
+    </div>
+  </div>
+
+  <div class="panel chart">
+    <h2>How sure is it?</h2>
+    <div class="cols" id="cols"></div>
+  </div>
+
+  <div id="err">Cannot reach the server. Run "python app.py" and open http://127.0.0.1:5000</div>
+</div>
+
+<script>
+const pad = document.getElementById('pad');
+const ctx = pad.getContext('2d', { willReadFrequently: true });
+const digitEl = document.getElementById('digit');
+const statusEl = document.getElementById('status');
+const colsEl = document.getElementById('cols');
+const errEl = document.getElementById('err');
+
+// ---- Build the 10 vertical bars ----
+const cols = [];
+for (let i = 0; i < 10; i++) {
+  const c = document.createElement('div');
+  c.className = 'col';
+  c.innerHTML = `<div class="pct">0%</div><div class="well"><div class="fill"></div></div><div class="lab">${i}</div>`;
+  colsEl.appendChild(c);
+  cols.push(c);
+}
+
+// Black ink on white paper (inverted later to match MNIST)
+function resetBoard() {
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, 280, 280);
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 20;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+resetBoard();
+
+// ---- Drawing ----
+let drawing = false, last = null;
+function pos(e) {
+  const r = pad.getBoundingClientRect();
+  return { x: (e.clientX - r.left) * 280 / r.width, y: (e.clientY - r.top) * 280 / r.height };
+}
+pad.addEventListener('pointerdown', e => {
+  drawing = true; pad.setPointerCapture(e.pointerId);
+  last = pos(e);
+  ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(last.x + 0.01, last.y); ctx.stroke();
+  predict();
+});
+pad.addEventListener('pointermove', e => {
+  if (!drawing) return;
+  const p = pos(e);
+  ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+  last = p;
+  predict();
+});
+['pointerup', 'pointercancel'].forEach(t => pad.addEventListener(t, () => { drawing = false; predict(); }));
+document.getElementById('clear').onclick = () => { clearSeq++; resetBoard(); showEmpty(); };
+
+// ---- Preprocess like MNIST: invert, crop, fit in 20x20, center by center of mass in 28x28 ----
+function getInput() {
+  const img = ctx.getImageData(0, 0, 280, 280).data;
+  let minX = 280, minY = 280, maxX = -1, maxY = -1;
+  for (let y = 0; y < 280; y++) {
+    for (let x = 0; x < 280; x++) {
+      if (255 - img[(y * 280 + x) * 4] > 40) {
+        if (x < minX) minX = x; if (x > maxX) maxX = x;
+        if (y < minY) minY = y; if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (maxX < 0) return null;
+
+  const w = maxX - minX + 1, h = maxY - minY + 1;
+  const scale = 20 / Math.max(w, h);
+  const sw = Math.max(1, Math.round(w * scale)), sh = Math.max(1, Math.round(h * scale));
+
+  const small = document.createElement('canvas');
+  small.width = sw; small.height = sh;
+  const sctx = small.getContext('2d', { willReadFrequently: true });
+  sctx.imageSmoothingEnabled = true;
+  sctx.drawImage(pad, minX, minY, w, h, 0, 0, sw, sh);
+  const sd = sctx.getImageData(0, 0, sw, sh).data;
+
+  // center of mass (ink = 255 - brightness)
+  let sum = 0, cx = 0, cy = 0;
+  for (let y = 0; y < sh; y++) {
+    for (let x = 0; x < sw; x++) {
+      const v = 255 - sd[(y * sw + x) * 4];
+      sum += v; cx += v * (x + 0.5); cy += v * (y + 0.5);
+    }
+  }
+  cx /= sum; cy /= sum;
+
+  const offX = Math.round(14 - cx), offY = Math.round(14 - cy);
+  const out = new Float32Array(784);
+  for (let y = 0; y < sh; y++) {
+    for (let x = 0; x < sw; x++) {
+      const tx = x + offX, ty = y + offY;
+      if (tx >= 0 && tx < 28 && ty >= 0 && ty < 28) {
+        out[ty * 28 + tx] = (255 - sd[(y * sw + x) * 4]) / 255;
+      }
+    }
+  }
+  return out;
+}
+
+// ---- UI ----
+function showEmpty() {
+  digitEl.textContent = '?';
+  statusEl.textContent = 'Draw something in the box';
+  cols.forEach(c => {
+    c.classList.remove('top');
+    c.querySelector('.fill').style.height = '0%';
+    c.querySelector('.pct').textContent = '0%';
+  });
+}
+function render(probs) {
+  let best = 0;
+  probs.forEach((p, i) => { if (p > probs[best]) best = i; });
+  digitEl.textContent = best;
+  statusEl.textContent = 'I am ' + (probs[best] * 100).toFixed(1) + '% sure this is a ' + best;
+  cols.forEach((c, i) => {
+    c.classList.toggle('top', i === best);
+    c.querySelector('.fill').style.height = (probs[i] * 100) + '%';
+    c.querySelector('.pct').textContent = Math.round(probs[i] * 100) + '%';
+  });
+}
+
+// ---- Ask the Flask server (one request at a time, always the latest drawing) ----
+let busy = false, pending = false, clearSeq = 0;
+async function predict() {
+  const x = getInput();
+  if (!x) { showEmpty(); return; }
+  if (busy) { pending = true; return; }
+  busy = true;
+  const seq = clearSeq;
+  try {
+    const res = await fetch('/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pixels: Array.from(x) })
+    });
+    const data = await res.json();
+    errEl.style.display = 'none';
+    if (seq === clearSeq) render(data.probs);
+  } catch (e) {
+    errEl.style.display = 'block';
+  }
+  busy = false;
+  if (pending) { pending = false; predict(); }
+}
+</script>
+</body>
+</html>
