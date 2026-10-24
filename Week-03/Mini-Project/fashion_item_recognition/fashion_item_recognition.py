@@ -43,14 +43,15 @@ print('Data folder:', DATA_DIR)
 OUT_DIR = Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()
 
 
-def show_fig(name):
-    """Save the current figure as a PNG next to this file; show it inline in a notebook."""
-    plt.tight_layout()
-    plt.savefig(OUT_DIR / f'{name}.png', dpi=120)
+def show_fig(name, fig=None):
+    """Save the given figure as a PNG next to this file; show it inline in a notebook."""
+    fig = fig if fig is not None else plt.gcf()
+    fig.tight_layout()
+    fig.savefig(OUT_DIR / f'{name}.png', dpi=120)
     if IN_NOTEBOOK:
         plt.show()
     else:
-        plt.close()
+        plt.close(fig)
         print('Saved figure:', OUT_DIR / f'{name}.png')
 
 MEAN, STD = 0.2860, 0.3530
@@ -85,7 +86,7 @@ for c, ax in enumerate(axes):
     ax.set_title(CLASSES[c], fontsize=8)
     ax.axis('off')
 plt.tight_layout()
-show_fig('categories')
+show_fig('categories', fig)
 
 # %% [markdown]
 # ## 3. Build three models
@@ -208,7 +209,7 @@ axes[1].set_ylabel('Accuracy (%)')
 axes[1].set_title('Accuracy')
 axes[1].legend(fontsize=7)
 plt.tight_layout()
-show_fig('training_curves')
+show_fig('training_curves', fig)
 
 # %% [markdown]
 # ## 6. Comparison table
@@ -233,7 +234,7 @@ for name, params, val_acc, test_acc, secs in results:
 # %% [markdown]
 # ## 7. Per-class accuracy and confusion matrix (improved CNN)
 plt.savefig('confusion_matrix.png', dpi=120)
-show_fig('confusion_matrix')
+show_fig('confusion_matrix', fig)
 
 
 # %%
@@ -260,7 +261,7 @@ print(f"{'Class':<14}{'Accuracy':>9}")
 for i, name in enumerate(CLASSES):
     print(f'{name:<14}{cm[i, i] / cm[i].sum() * 100:>8.1f}%')
 
-plt.figure(figsize=(8, 7))
+fig = plt.figure(figsize=(8, 7))
 plt.imshow(cm, cmap='Blues')
 plt.colorbar()
 plt.xticks(range(10), CLASSES, rotation=45, ha='right', fontsize=8)
@@ -273,7 +274,7 @@ for i in range(10):
         plt.text(j, i, cm[i, j], ha='center', va='center', fontsize=7,
                  color='white' if cm[i, j] > cm.max() / 2 else 'black')
 plt.tight_layout()
-show_fig('prediction_gallery')
+show_fig('prediction_gallery', fig)
 
 pairs = sorted([(cm[i, j], i, j) for i in range(10) for j in range(10) if i != j], reverse=True)
 print('Most common mistakes:')
@@ -284,7 +285,7 @@ for count, t, p in pairs[:5]:
 # ## 8. Prediction gallery
 # 32 test images with the improved CNN's prediction and confidence. Green titles are correct, red titles are mistakes.
 plt.savefig('prediction_gallery.png', dpi=120)
-show_fig('wrong_predictions')
+show_fig('wrong_predictions', fig)
 # %%
 fig, axes = plt.subplots(4, 8, figsize=(16, 9))
 for i, ax in enumerate(axes.flat):
