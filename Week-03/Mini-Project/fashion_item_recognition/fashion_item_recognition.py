@@ -9,12 +9,17 @@
 # 50,000 images for training, 10,000 for validation, and the 10,000 test images for the final result only. Training images get a random horizontal flip as augmentation (clothes look the same when mirrored). All three models are trained on the same data.
 
 # %%
+import sys
 import time
 from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib
+IN_NOTEBOOK = 'ipykernel' in sys.modules      # True in a notebook / Run Cell
+if not IN_NOTEBOOK:
+    matplotlib.use('Agg')                      # no pop-up windows when run as a plain file
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 from torchvision import datasets, transforms
@@ -34,6 +39,19 @@ def find_data_dir():
 
 DATA_DIR = find_data_dir()
 print('Data folder:', DATA_DIR)
+
+OUT_DIR = Path(__file__).resolve().parent if '__file__' in globals() else Path.cwd()
+
+
+def show_fig(name):
+    """Save the current figure as a PNG next to this file; show it inline in a notebook."""
+    plt.tight_layout()
+    plt.savefig(OUT_DIR / f'{name}.png', dpi=120)
+    if IN_NOTEBOOK:
+        plt.show()
+    else:
+        plt.close()
+        print('Saved figure:', OUT_DIR / f'{name}.png')
 
 MEAN, STD = 0.2860, 0.3530
 CLASSES = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
@@ -67,7 +85,7 @@ for c, ax in enumerate(axes):
     ax.set_title(CLASSES[c], fontsize=8)
     ax.axis('off')
 plt.tight_layout()
-plt.show()
+show_fig('categories')
 
 # %% [markdown]
 # ## 3. Build three models
@@ -190,7 +208,7 @@ axes[1].set_ylabel('Accuracy (%)')
 axes[1].set_title('Accuracy')
 axes[1].legend(fontsize=7)
 plt.tight_layout()
-plt.show()
+show_fig('training_curves')
 
 # %% [markdown]
 # ## 6. Comparison table
@@ -215,7 +233,7 @@ for name, params, val_acc, test_acc, secs in results:
 # %% [markdown]
 # ## 7. Per-class accuracy and confusion matrix (improved CNN)
 plt.savefig('confusion_matrix.png', dpi=120)
-plt.show()
+show_fig('confusion_matrix')
 
 
 # %%
@@ -255,7 +273,7 @@ for i in range(10):
         plt.text(j, i, cm[i, j], ha='center', va='center', fontsize=7,
                  color='white' if cm[i, j] > cm.max() / 2 else 'black')
 plt.tight_layout()
-plt.show()
+show_fig('prediction_gallery')
 
 pairs = sorted([(cm[i, j], i, j) for i in range(10) for j in range(10) if i != j], reverse=True)
 print('Most common mistakes:')
@@ -266,7 +284,7 @@ for count, t, p in pairs[:5]:
 # ## 8. Prediction gallery
 # 32 test images with the improved CNN's prediction and confidence. Green titles are correct, red titles are mistakes.
 plt.savefig('prediction_gallery.png', dpi=120)
-plt.show()
+show_fig('wrong_predictions')
 # %%
 fig, axes = plt.subplots(4, 8, figsize=(16, 9))
 for i, ax in enumerate(axes.flat):
@@ -300,10 +318,10 @@ plt.show()
 # Only the learned weights (the state dict) are saved. To use the model later, create `ImprovedCNN()` again and load the weights into it.
 
 # %%
-torch.save(improved.state_dict(), 'fashion_cnn.pth')
+torch.save(improved.state_dict(), str(OUT_DIR / 'fashion_cnn.pth'))
 
 reloaded = ImprovedCNN()
-reloaded.load_state_dict(torch.load('fashion_cnn.pth'))
+reloaded.load_state_dict(torch.load(str(OUT_DIR / 'fashion_cnn.pth')))
 reloaded.eval()
 _, reloaded_acc = evaluate(reloaded, test_loader)
 print(f'Saved fashion_cnn.pth. Reloaded model test accuracy: {reloaded_acc * 100:.2f}%')
