@@ -214,6 +214,9 @@ for name, params, val_acc, test_acc, secs in results:
 
 # %% [markdown]
 # ## 7. Per-class accuracy and confusion matrix (improved CNN)
+plt.savefig('confusion_matrix.png', dpi=120)
+plt.show()
+
 
 # %%
 def predict_all(model, loader):
@@ -262,7 +265,8 @@ for count, t, p in pairs[:5]:
 # %% [markdown]
 # ## 8. Prediction gallery
 # 32 test images with the improved CNN's prediction and confidence. Green titles are correct, red titles are mistakes.
-
+plt.savefig('prediction_gallery.png', dpi=120)
+plt.show()
 # %%
 fig, axes = plt.subplots(4, 8, figsize=(16, 9))
 for i, ax in enumerate(axes.flat):
