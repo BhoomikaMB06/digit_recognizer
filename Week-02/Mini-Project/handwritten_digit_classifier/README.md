@@ -7,6 +7,10 @@ A fully connected neural network trained on MNIST to recognise the digits 0-9.
 - Model: 784 -> 256 -> 128 -> 10, ReLU, dropout 0.2
 - Loss: cross-entropy, optimizer: Adam (lr 0.001), 10 epochs, batch size 64
 
+## Sample digits
+![Sample digits](https://github.com/user-attachments/assets/00a13af5-214e-4b65-8590-88fa800adeff)
+)
+
 ## Results
 - Final validation accuracy: 97.50%
 - Test accuracy: 97.73% (227 wrong predictions out of 10,000)

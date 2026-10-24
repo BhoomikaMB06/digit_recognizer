@@ -3,7 +3,6 @@
 # ## Build and Evaluate a CNN on Fashion-MNIST
 #
 # **Goal:** Load and visualise Fashion-MNIST, build a small CNN, compare it with a fully connected baseline, plot training and validation curves, and explain five misclassified examples.
-
 # %% [markdown]
 # ## 1. Import libraries and load the data
 # Fashion-MNIST has 70,000 greyscale images (28x28 pixels) of 10 clothing categories. The 60,000 training images are split into 50,000 for training and 10,000 for validation. The 10,000 test images are used only for the final result.
