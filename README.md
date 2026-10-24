@@ -27,16 +27,19 @@ Notebook with the code, graphs and analysis: [fashion_item_recognition.ipynb](fa
 **Best model:** __ with a test accuracy of __%, which is __ points above the fully connected baseline.
 
 ## Training and validation curves
-![Training curves](training_curves.png)
+![Training curves](https://github.com/user-attachments/assets/1d3c75a9-85d3-425d-8e26-574ab37f1c02
+)
 
 ## Confusion matrix
-![Confusion matrix](confusion_matrix.png)
+![Confusion matrix](https://github.com/user-attachments/assets/f1a9032f-9d24-4188-9864-18f8a424956b
+)
 
 - Lowest per-class accuracy: __ (__%)
 - Most common mistakes: __ predicted as __ (__ times), __ predicted as __ (__ times)
 
 ## Prediction gallery
-![Prediction gallery](prediction_gallery.png)
+![Prediction gallery](https://github.com/user-attachments/assets/67f72faf-5844-4ef8-8fb7-aebbd027fbbd
+)
 
 Green titles are correct predictions, red titles are mistakes.
 
