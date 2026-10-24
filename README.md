@@ -3,6 +3,9 @@
 A convolutional neural network that classifies clothing images into 10 categories (T-shirt/top, trouser, pullover, dress, coat, sandal, shirt, sneaker, bag, ankle boot). Three models are compared, and the best one is saved.
 
 Notebook with the code, graphs and analysis: [fashion_item_recognition.ipynb](fashion_item_recognition.ipynb)
+## categories
+![categories](https://github.com/user-attachments/assets/dffd1555-c3a0-426d-be62-bffda4ea0be6
+)
 
 ## Setup
 - Data: Fashion-MNIST, 28x28 greyscale images, 50,000 train / 10,000 validation / 10,000 test
@@ -27,16 +30,19 @@ Notebook with the code, graphs and analysis: [fashion_item_recognition.ipynb](fa
 **Best model:** __ with a test accuracy of __%, which is __ points above the fully connected baseline.
 
 ## Training and validation curves
-![Training curves](training_curves.png)
+![Training curves](https://github.com/user-attachments/assets/1d3c75a9-85d3-425d-8e26-574ab37f1c02
+)
 
 ## Confusion matrix
-![Confusion matrix](confusion_matrix.png)
+![Confusion matrix](https://github.com/user-attachments/assets/f1a9032f-9d24-4188-9864-18f8a424956b
+)
 
 - Lowest per-class accuracy: __ (__%)
 - Most common mistakes: __ predicted as __ (__ times), __ predicted as __ (__ times)
 
 ## Prediction gallery
-![Prediction gallery](prediction_gallery.png)
+![Prediction gallery](https://github.com/user-attachments/assets/33ea2d40-9629-4f3a-a65b-23689eca7c9b
+)
 
 Green titles are correct predictions, red titles are mistakes.
 
