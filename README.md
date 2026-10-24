@@ -4,7 +4,7 @@ A convolutional neural network that classifies clothing images into 10 categorie
 
 Notebook with the code, graphs and analysis: [fashion_item_recognition.ipynb](fashion_item_recognition.ipynb)
 ## categories
-![categories] (https://github.com/user-attachments/assets/dffd1555-c3a0-426d-be62-bffda4ea0be6
+![categories](https://github.com/user-attachments/assets/dffd1555-c3a0-426d-be62-bffda4ea0be6
 )
 
 ## Setup
