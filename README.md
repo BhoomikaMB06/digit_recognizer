@@ -1,32 +1,53 @@
-# Mini Project 1: Numerical Pattern Predictor
+# Mini Project 3: Fashion Item Recognition
 
-A neural network that learns the relationship y = 3x² + 2x + 5 from noisy generated data and predicts outputs for inputs it has never seen.
+A convolutional neural network that classifies clothing images into 10 categories (T-shirt/top, trouser, pullover, dress, coat, sandal, shirt, sneaker, bag, ankle boot). Three models are compared, and the best one is saved.
+
+Notebook with the code, graphs and analysis: [fashion_item_recognition.ipynb](fashion_item_recognition.ipynb)
 
 ## Setup
-- Data: 1000 points, x between -3 and 3, noise standard deviation 0.5
-- Split: 700 train, 150 validation, 150 test
-- Model: 1 -> 64 -> 64 -> 1 with ReLU activations
-- Loss: MSE, optimizer: Adam (learning rate 0.01), 500 epochs
+- Data: Fashion-MNIST, 28x28 greyscale images, 50,000 train / 10,000 validation / 10,000 test
+- Preprocessing: pixels normalised with mean 0.2860 and std 0.3530
+- Augmentation (training only): random horizontal flip
+- Loss: cross-entropy, optimizer: Adam (learning rate 0.001), 8 epochs, batch size 64
+
+## Models compared
+1. **Fully connected baseline:** 784 -> 128 -> 64 -> 10 with ReLU
+2. **Small CNN:** two convolution blocks (16 and 32 filters, 3x3, padding 1, ReLU, 2x2 max pooling), then 64 -> 10
+3. **Improved CNN:** two convolution blocks (32 and 64 filters) with batch normalisation, dropout 0.3, then 128 -> 10
 
 ## Results
-**Test MSE: 0.2522**
+| Model | Parameters | Val acc | Test acc | Train time (s) |
+|---|---|---|---|---|
+| Fully connected | 109,386 | __% | __% | __ |
+| Small CNN | 105,866 | __% | __% | __ |
+| Improved CNN | 421,834 | __% | __% | __ |
 
-Predictions for inputs the model never saw:
+(Copy the markdown table printed by section 6 of the notebook.)
 
-| x    | Predicted | True   | Error |
-|------|-----------|--------|-------|
-| -2.5 | 18.905    | 18.750 | 0.155 |
-| 0.0  | 5.014     | 5.000  | 0.014 |
-| 1.5  | 14.540    | 14.750 | 0.210 |
-| 2.8  | 34.001    | 34.120 | 0.119 |
+**Best model:** __ with a test accuracy of __%, which is __ points above the fully connected baseline.
 
-## Loss curve
-![Loss curve](https://github.com/user-attachments/assets/cf594eee-3510-4d80-a37f-675f401c718a
-)
+## Training and validation curves
+![Training curves](training_curves.png)
 
-## Actual vs predicted
-![Actual vs predicted](https://github.com/user-attachments/assets/e5430396-9d2b-4c5b-9308-de036396b6fb
-)
+## Confusion matrix
+![Confusion matrix](confusion_matrix.png)
 
-## Explanation
-The model learned the curved relationship well. The test MSE of 0.2522 is almost equal to the noise variance in the data (0.5² = 0.25), which is the lowest error any model can reach, because random noise cannot be predicted. This means the network fits the true pattern y = 3x² + 2x + 5 almost perfectly. The red prediction curve follows the parabola through the test points, and the four unseen inputs were predicted within about 0.2 of their true values. The training and validation losses stayed close together in the loss curve, so there was no sign of overfitting. The ReLU hidden layers were enough to model the curve, even though the relationship is not a straight line.
+- Lowest per-class accuracy: __ (__%)
+- Most common mistakes: __ predicted as __ (__ times), __ predicted as __ (__ times)
+
+## Prediction gallery
+![Prediction gallery](prediction_gallery.png)
+
+Green titles are correct predictions, red titles are mistakes.
+
+## Error analysis
+(Write 4 or 5 lines using your own results. For example: the model mixes up classes with similar outlines, such as Shirt, T-shirt/top, Pullover and Coat, because at 28x28 pixels only small details like collars and buttons tell them apart. Footwear classes (Sneaker, Sandal, Ankle boot) are confused when the shoe design is unusual. Some images are ambiguous even for a person.)
+
+## Saved model
+`fashion_cnn.pth` holds the weights of the improved CNN. To use it, create `ImprovedCNN()` from the notebook and call `load_state_dict(torch.load('fashion_cnn.pth'))`. The notebook reloads it and checks that the test accuracy matches.
+
+## How to run
+```
+pip install torch torchvision matplotlib numpy pillow
+```
+Open `fashion_item_recognition.ipynb` and run all cells. Fashion-MNIST is downloaded automatically on the first run.
