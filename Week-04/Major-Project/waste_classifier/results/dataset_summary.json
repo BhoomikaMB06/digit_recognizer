@@ -1,0 +1,52 @@
+{
+  "classes": [
+    "cardboard",
+    "glass",
+    "metal",
+    "paper",
+    "plastic"
+  ],
+  "raw_counts": {
+    "cardboard": 403,
+    "glass": 501,
+    "metal": 410,
+    "paper": 594,
+    "plastic": 482
+  },
+  "after_dedup_counts": {
+    "cardboard": 401,
+    "glass": 498,
+    "metal": 409,
+    "paper": 586,
+    "plastic": 480
+  },
+  "split_counts": {
+    "train": {
+      "cardboard": 280,
+      "glass": 348,
+      "metal": 286,
+      "paper": 410,
+      "plastic": 336
+    },
+    "val": {
+      "cardboard": 60,
+      "glass": 74,
+      "metal": 61,
+      "paper": 87,
+      "plastic": 72
+    },
+    "test": {
+      "cardboard": 61,
+      "glass": 76,
+      "metal": 62,
+      "paper": 89,
+      "plastic": 72
+    }
+  },
+  "exact_duplicates_removed": 0,
+  "near_duplicates_removed": 6,
+  "conflicting_labels_removed": 10,
+  "unreadable_skipped": 0,
+  "near_duplicate_bits": 10,
+  "shared_between_splits": 0
+}

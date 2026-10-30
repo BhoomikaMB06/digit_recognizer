@@ -1,0 +1,8 @@
+Week-04/Major-Project/waste_classifier/dataset/
+.gradio/
+venv/
+__pycache__/
+*.pyc
+venv/
+__pycache__/
+*.pyc
