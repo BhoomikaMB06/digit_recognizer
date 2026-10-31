@@ -15,7 +15,7 @@ The test set has 360 images, so the 95% margin on the accuracy is about plus or 
 
 ![Confusion matrix](results/confusion_matrix_baseline.png)
 
-Full analysis: [Assignment 4 report](../../Assignment/assignment4_report.md).
+Full analysis: [Assignment 4 report](../../Assignment/evaluation_report.md).
 
 ## How to run
 1. Download the Kaggle "Garbage Classification" dataset and put it where `prepare_data.py` expects it.

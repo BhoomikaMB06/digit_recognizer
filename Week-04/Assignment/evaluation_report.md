@@ -19,7 +19,7 @@ catch-all, so it was left out.
 | plastic | 482 | 480 | 336 | 72 | 72 |
 | **Total** | **2390** | **2374** | **1660** | **354** | **360** |
 
-![Class distribution](../Major-Project/waste_classifier/results/class_distribution.png)
+![Class distribution](images/class_distribution.png)
 
 - **Class balance:** the largest class (paper, 586 images) is 1.5 times the size of the smallest (cardboard, 401 images).
 - **Duplicates:** 0 exact duplicates and 6 near-duplicates (same picture resized or re-saved, at most 10 of 256 hash bits different) were removed, and 10 pictures that appeared under two different labels were dropped. 0 unreadable files were skipped.
@@ -37,7 +37,7 @@ The improved CNN scored 92.8% on the test set against 73.6% for the baseline, wh
 
 ## 3. Training curves and overfitting
 
-![Training curves](../Major-Project/waste_classifier/results/training_curves.png)
+![Training curves](images/training_curves.png)
 
 - At the last epoch the baseline CNN reached 99.2% training accuracy and 65.5% validation accuracy (difference +33.6 points). This large gap suggests the model is memorising the training images (overfitting).
 - At the last epoch the improved CNN reached 92.5% training accuracy and 89.8% validation accuracy (difference +2.6 points). The gap is small, so there is little sign of overfitting.
@@ -54,7 +54,7 @@ The improved CNN scored 92.8% on the test set against 73.6% for the baseline, wh
 
 The easiest class was **cardboard** (recall 96.7%) and the hardest was **glass** (recall 86.8%).
 
-![Confusion matrix](../Major-Project/waste_classifier/results/confusion_matrix_baseline.png)
+![Confusion matrix](images/confusion_matrix_baseline.png)
 
 | True \ Predicted | cardboard | glass | metal | paper | plastic |
 |---|---|---|---|---|---|

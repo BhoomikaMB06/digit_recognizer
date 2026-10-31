@@ -6,3 +6,5 @@ __pycache__/
 venv/
 __pycache__/
 *.pyc
+
+Week-04/Major-Project/waste_classifier/dataset/
