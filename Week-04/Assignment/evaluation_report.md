@@ -81,6 +81,9 @@ Most common confusions: glass predicted as plastic (6 times); plastic predicted 
 | plastic_0015.jpg | plastic | metal | 76.79% |
 | plastic_0054.jpg | plastic | glass | 75.07% |
 
+![Failure examples]<img width="850" height="387" alt="Screenshot 2026-10-31 080926" src="https://github.com/user-attachments/assets/ea72e112-2b1e-459d-894a-ff27d018e12d" />
+
+
 ## 6. Confidence of the mistakes
 
 The model made 3 wrong predictions with a score of 90% or more, so a high score is not a guarantee of a correct answer.
