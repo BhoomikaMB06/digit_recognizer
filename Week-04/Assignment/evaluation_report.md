@@ -2,6 +2,8 @@
 
 Project: Waste Image Classification System (Major Project, Week 4). The code, models and the Gradio app are in
 [Major-Project/waste_classifier](../Major-Project/waste_classifier/).
+<img width="1576" height="728" alt="Screenshot 2026-10-31 080232" src="https://github.com/user-attachments/assets/c4391d0c-79ac-4e58-930a-ae733ec8721e" />
+
 
 ## 1. Dataset source, class distribution and split sizes
 
