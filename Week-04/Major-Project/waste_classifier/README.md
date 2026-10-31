@@ -129,4 +129,5 @@ Full analysis: [Assignment 4 report](../../Assignment/evaluation_report.md).
 - The model made 3 wrong predictions with a score of 90% or more, so a high score is not a guarantee of a correct answer.
 
 ## Demo video
+(https://drive.google.com/file/d/1tJG9tVg5OStfxru3JN9W3956_O4la2Wv/view?usp=drivesdk)
 
